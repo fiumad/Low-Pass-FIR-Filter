@@ -13,7 +13,7 @@ parameter NUM_TAPS = 102;
 
 logic signed [31:0] coeffs [102:0];
 
-initial begin 
+always_comb begin 
   coeffs[0] = 32'b11111111111110000010000011101100;
   coeffs[1] = 32'b11111111111000010011001010000001;
   coeffs[2] = 32'b11111111101011100010111001111001;
@@ -121,7 +121,7 @@ end
 logic signed [31:0] even_samples [(NUM_TAPS / 2) - 1:0];
 logic signed [31:0] odd_samples [(NUM_TAPS / 2) - 1:0];
 
-logic signed [63:0] h0, h01, h1, h1_delayed;  
+logic signed [63:0] h0, h01, h1, h1_delayed;
 
 always_ff @(posedge clk or posedge rst) begin
   if (rst) begin
@@ -148,8 +148,8 @@ always_comb begin
   
   for (int i=0; i <= (NUM_TAPS/2) - 1; i=i+1) begin
     h0 += even_samples[i] * coeffs[2*i];
-    h01 += (even_samples[i] * odd_samples[i]) + (coeffs[2*i] * coeffs[2*i+1]);
-    h1 += even_samples[i] * coeffs[2*i+1];
+    h01 += (even_samples[i] + odd_samples[i]) * (coeffs[2*i] + coeffs[2*i+1]);
+    h1 += odd_samples[i] * coeffs[2*i+1];
   end
 end
 
