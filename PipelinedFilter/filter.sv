@@ -11,7 +11,7 @@ parameter NUM_TAPS = 102;
 
 logic signed [31:0] coeffs [0:102];
 
-initial begin 
+always_comb @(posedge rst) begin
   coeffs[0] = 32'b11111111111110000010000011101100;
   coeffs[1] = 32'b11111111111000010011001010000001;
   coeffs[2] = 32'b11111111101011100010111001111001;
