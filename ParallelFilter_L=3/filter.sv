@@ -15,7 +15,7 @@ parameter NUM_TAPS = 102;
 
 logic signed [31:0] coeffs [102:0];
 
-initial begin 
+always_comb begin 
   coeffs[0] = 32'b11111111111110000010000011101100;
   coeffs[1] = 32'b11111111111000010011001010000001;
   coeffs[2] = 32'b11111111101011100010111001111001;
@@ -120,35 +120,44 @@ initial begin
   coeffs[101] = 32'b11111111111110000010000011101100;
 end
 
+// Instantiate sample registers
 logic signed [31:0] x_3k_samples [(NUM_TAPS / 3) - 1:0];
 logic signed [31:0] x_3k1_samples [(NUM_TAPS / 3) - 1:0];
 logic signed [31:0] x_3k2_samples [(NUM_TAPS / 3) - 1:0];
 
+// Initialize intermediate computations to be accessed by various function units
+// in the filter
 logic signed [63:0] h0, h1, h2, h01, h12, h012, h2_delay, h12minh1_delay;  
-logic signed [63:0] h12minh1; 
+logic signed [63:0] h01minh1, h12minh1; 
 
+// Instantiate adders for intermediate computations
 assign h12minh1 = h12 - h1;
 assign h01minh1 = h01 - h1;
 
 always_ff @(posedge clk or posedge rst) begin
   if (rst) begin
+    // Clear the delay units
     h2_delay <= 0;
     h12minh1_delay <= 0;
     for (int i=0; i < NUM_TAPS/3-1; i=i+1) begin
+      // Clear the sample registers
       x_3k_samples[i] <= 0;
       x_3k1_samples[i] <= 0;
       x_3k2_samples[i] <= 0;
     end 
   end else begin
     for (int i=NUM_TAPS/2-1; i > 0; i=i-1) begin
+      // Shift samples
       x_3k_samples[i] <= x_3k_samples[i-1];
       x_3k1_samples[i] <= x_3k1_samples[i-1];
       x_3k2_samples[i] <= x_3k2_samples[i-1];
     end
+    // Take in new samples
     x_3k_samples[0] <= x_in;
     x_3k1_samples[0] <= x_in1;
     x_3k2_samples[0] <= x_in2;
 
+    // push delay signals through their delay units
     h2_delay <= h2;
     h12minh1_delay <= h12minh1;
   end
@@ -156,7 +165,6 @@ end
 
 always_comb begin
   h0 = 0;
-  h01 = 0;
   h1 = 0;
   h2 = 0;
   h01 = 0;
@@ -164,6 +172,8 @@ always_comb begin
   h012 = 0;
   
   for (int i=0; i <= (NUM_TAPS/3) - 1; i=i+1) begin
+    // Perform multiplication with coefficients and accumulations in all three
+    // paths
     h0 += x_3k_samples[i] * coeffs[3*i];
     h1 += x_3k1_samples[i] * coeffs[3*i+1];
     h2 += x_3k2_samples[i] * coeffs[3*i+2];
@@ -174,6 +184,7 @@ always_comb begin
   end
 end
 
+// Perform final summations and output the filtered data
 assign y_out = (h0 - h2_delay + h12minh1_delay) >>> 31;
 assign y_out1 = (h01minh1 - h0 - h2_delay) >>> 31;
 assign y_out2 = (h012 - h01minh1 - h12minh1) >>> 31;
