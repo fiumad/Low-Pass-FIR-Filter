@@ -16,6 +16,8 @@ processing.
 
 As seen in the image above, the filter's transistion region is between .2 pi and .23 pi, and the stop band attenuation is greater than 80 dB.
 
+The filter coefficients were quantized to 32 bit signed integers and scaled to ensure that the span of coefficients occupied the entire range representable by 32 bits. This quantization approach led to little to no degradation in the response of the filter. (No plot shown since the difference was so minor). To account for the scaling that was done to minimize the quantization effect in the coefficients, the final outputs in every filter design shown below are right-shifted by 31 bits to return the final answer to the original range.
+
 2. Next, a python script (`./Python/coef-h-to-signed-int.py`) was used to save these coefficients as 32 bit binary signed integers for use in verilog. The script also added assignment statements for ease of use in hdl files. These 32 bit binary signed integer coefficients can be found in (`./Python/coefficients.txt`). The base 10 version of these coefficients are hard coded into the python conversion script.
 
 ```python
@@ -40,7 +42,9 @@ coefficients = [
 ]
 ```
 
-3. Next, several python scripts were utilized to generate discretized input signal data for use in filter test benches. These scripts can all be found within the `./Python/` directory. Among the several signals generated, notably, a two-tone sinusoid (components at 100MHz and 500MHz) was generated. This signal nicely demonstrates the filtering capabilities of the filters implemented in this project. The 100MHz component of this signal should be firmly in the pass band, and the 500MHz signal should be firmly in the stop band. When generating these discretized input signals, a sample rate of 2GHz was used. The operating speed of all filters in this project will be held at 2GHz.  
+3. Next, several python scripts were utilized to generate discretized input signal data for use in filter test benches. These scripts can all be found within the `./Python/` directory. One very important step in generating this signals was to ensure that the signal samples were stored in a big endian format. This is because the test benches used to interact with each filter utilized the `$fread` function which expects big endian data. This nuance took me a very long time to figure out as my python scripts were storing data in little endian format by default. 
+
+Among the several signals generated, notably, a two-tone sinusoid (components at 100MHz and 500MHz) was generated. This signal nicely demonstrates the filtering capabilities of the filters implemented in this project. The 100MHz component of this signal should be firmly in the pass band, and the 500MHz signal should be firmly in the stop band. When generating these discretized input signals, a sample rate of 2GHz was used. The operating speed of all filters in this project will be held at 2GHz. This operating frequency was chosen in the hopes that the filters could perform real-time signal processing on the two-tone signal test account for some room for error. 
 
 4. Now that the filter coefficients and test signals have been generated, we can begin implementing and benchmarking various filter architectures. Each filter is implemented using System Verilog, simulated with iverilog and examined using GTKWave. Once determined to be working via behavioral simulation, Cadence Genus is used to synthesize each filter and generate timing, area, and power reports for benchmarking purposes. The synthesis tool (Genus) is configured to use standard cells from a typical 45nm process.
 
