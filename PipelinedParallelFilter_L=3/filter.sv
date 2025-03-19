@@ -13,6 +13,7 @@ module filter(
 
 parameter NUM_TAPS = 102;
 
+// Coefficients
 logic signed [31:0] coeffs [102:0];
 
 always_comb begin 
@@ -120,74 +121,111 @@ always_comb begin
   coeffs[101] = 32'b11111111111110000010000011101100;
 end
 
-// Instantiate sample registers
-logic signed [31:0] x_3k_samples [(NUM_TAPS / 3) - 1:0];
-logic signed [31:0] x_3k1_samples [(NUM_TAPS / 3) - 1:0];
-logic signed [31:0] x_3k2_samples [(NUM_TAPS / 3) - 1:0];
 
-// Initialize intermediate computations to be accessed by various function units
-// in the filter
-logic signed [63:0] h0, h1, h2, h01, h12, h012, h2_delay, h12minh1_delay;  
-logic signed [63:0] h01minh1, h12minh1; 
+// Combined fine-grain pipelining and parallel processing for 3-tap FIR filter
 
-// Instantiate adders for intermediate computations
-assign h12minh1 = h12 - h1;
-assign h01minh1 = h01 - h1;
+// Instantiate registers that lie between multiplications in each branch of
+// the filter
 
+// Pipelines for computing y(3k)
+logic signed [63:0] y_3k_x_3k2_pipeline [NUM_TAPS-1:0];
+logic signed [63:0] y_3k_x_3k1_pipeline [NUM_TAPS-1:0];
+logic signed [63:0] y_3k_x_3k_pipeline [NUM_TAPS-1:0];
+
+//Pipelines for computing y(3k + 1)
+logic signed [63:0] y_3k1_x_3k2_pipeline [NUM_TAPS-1:0];
+logic signed [63:0] y_3k1_x_3k1_pipeline [NUM_TAPS-1:0];
+logic signed [63:0] y_3k1_x_3k_pipeline [NUM_TAPS-1:0];
+
+//Pipelines for computing y(3k + 2)
+logic signed [63:0] y_3k2_x_3k2_pipeline [NUM_TAPS-1:0];
+logic signed [63:0] y_3k2_x_3k1_pipeline [NUM_TAPS-1:0];
+logic signed [63:0] y_3k2_x_3k_pipeline [NUM_TAPS-1:0];
+
+// Instantiate delay units for input samples
+logic signed [31:0] x3k1_delayed;
+logic signed [31:0] x3k2_delayed;
+
+always_ff @(posedge clk or posedge rst) begin 
+  if (rst) begin 
+    x3k1_delayed <= 0;
+    x3k2_delayed <= 0;
+  end else begin
+    x3k1_delayed <= x_in1;
+    x3k2_delayed <= x_in2;
+  end
+end
+
+// Compute y(3k)
 always_ff @(posedge clk or posedge rst) begin
   if (rst) begin
-    // Clear the delay units
-    h2_delay <= 0;
-    h12minh1_delay <= 0;
-    for (int i=0; i < NUM_TAPS/3-1; i=i+1) begin
-      // Clear the sample registers
-      x_3k_samples[i] <= 0;
-      x_3k1_samples[i] <= 0;
-      x_3k2_samples[i] <= 0;
-    end 
-  end else begin
-    for (int i=NUM_TAPS/2-1; i > 0; i=i-1) begin
-      // Shift samples
-      x_3k_samples[i] <= x_3k_samples[i-1];
-      x_3k1_samples[i] <= x_3k1_samples[i-1];
-      x_3k2_samples[i] <= x_3k2_samples[i-1];
+    for (int i = NUM_TAPS-1; i >= 0; i=i-1) begin
+      y_3k_x_3k_pipeline[i] <= 0;
+      y_3k_x_3k1_pipeline[i] <= 0;
+      y_3k_x_3k2_pipeline[i] <= 0;
     end
-    // Take in new samples
-    x_3k_samples[0] <= x_in;
-    x_3k1_samples[0] <= x_in1;
-    x_3k2_samples[0] <= x_in2;
+  end else begin
+    for (int i = 1; i < NUM_TAPS-1; i=i+1) begin
+      // Shift and multiply by new coefficient
+      y_3k_x_3k_pipeline[i] <=  y_3k_x_3k_pipeline[i-1] * coeffs[i-1];
+      y_3k_x_3k1_pipeline[i] <= y_3k_x_3k1_pipeline[i-1] * coeffs[i-1];
+      y_3k_x_3k2_pipeline[i] <= y_3k_x_3k2_pipeline[i-1] * coeffs[i-1];
+    end
+    y_3k_x_3k_pipeline[0] <= x_in * coeffs[0];
+    y_3k_x_3k1_pipeline[0] <= x3k1_delayed * coeffs[0];
+    y_3k_x_3k2_pipeline[0] <= x3k2_delayed * coeffs[0];
 
-    // push delay signals through their delay units
-    h2_delay <= h2;
-    h12minh1_delay <= h12minh1;
   end
 end
 
+// Compute y(3k + 1)
+always_ff @(posedge clk or posedge rst) begin
+  if (rst) begin
+    for (int i = NUM_TAPS-1; i >= 0; i=i-1) begin
+      y_3k1_x_3k_pipeline[i] <= 0;
+      y_3k1_x_3k1_pipeline[i] <= 0;
+      y_3k1_x_3k2_pipeline[i] <= 0;
+    end
+  end else begin
+    for (int i = 1; i < NUM_TAPS-1; i=i+1) begin
+      // Shift and multiply by new coefficient
+      y_3k1_x_3k_pipeline[i] <= y_3k1_x_3k_pipeline[i-1] * coeffs[i-1];
+      y_3k1_x_3k1_pipeline[i] <= y_3k1_x_3k1_pipeline[i-1] * coeffs[i-1];
+      y_3k1_x_3k2_pipeline[i] <= y_3k1_x_3k2_pipeline[i-1] * coeffs[i-1];
+    end
+    y_3k1_x_3k_pipeline[0] <= x_in * coeffs[0];
+    y_3k1_x_3k1_pipeline[0] <= x_in1 * coeffs[0];
+    y_3k1_x_3k2_pipeline[0] <= x3k2_delayed * coeffs[0];
+  end
+end
+
+// Compute y(3k + 2)
+always_ff @(posedge clk or posedge rst) begin
+  if (rst) begin
+    for (int i = NUM_TAPS-1; i >= 0; i=i-1) begin
+      y_3k2_x_3k_pipeline[i] <= 0;
+      y_3k2_x_3k1_pipeline[i] <= 0;
+      y_3k2_x_3k2_pipeline[i] <= 0;
+    end
+  end else begin
+    for (int i = 1; i < NUM_TAPS-1; i=i+1) begin
+      // Shift and multiply by new coefficient
+      y_3k2_x_3k_pipeline[i] <= y_3k2_x_3k_pipeline[i-1] * coeffs[i-1];
+      y_3k2_x_3k1_pipeline[i] <= y_3k2_x_3k1_pipeline[i-1] * coeffs[i-1];
+      y_3k2_x_3k2_pipeline[i] <= y_3k2_x_3k2_pipeline[i-1] * coeffs[i-1];
+    end
+    y_3k2_x_3k_pipeline[0] <= x_in * coeffs[0];
+    y_3k2_x_3k1_pipeline[0] <= x_in1 * coeffs[0];
+    y_3k2_x_3k2_pipeline[0] <= x_in2 * coeffs[0];
+  end
+end
+
+// Accumulate the values from the multiplication pipelines
 always_comb begin
-  h0 = 0;
-  h1 = 0;
-  h2 = 0;
-  h01 = 0;
-  h12 = 0;
-  h012 = 0;
-  
-  for (int i=0; i <= (NUM_TAPS/3) - 1; i=i+1) begin
-    // Perform multiplication with coefficients and accumulations in all three
-    // paths
-    h0 += x_3k_samples[i] * coeffs[3*i];
-    h1 += x_3k1_samples[i] * coeffs[3*i+1];
-    h2 += x_3k2_samples[i] * coeffs[3*i+2];
-
-    h01 += (x_3k_samples[i] + x_3k1_samples[i]) * (coeffs[3*i] + coeffs[3*i+1]); 
-    h12 += (x_3k1_samples[i] + x_3k2_samples[i]) * (coeffs[3*i+1] + coeffs[3*i+2]); 
-    h012 += (x_3k_samples[i] + x_3k1_samples[i] + x_3k2_samples[i]) * (coeffs[3*i] + coeffs[3*i+1] + coeffs[3*i+2]); 
-  end
+  y_out = y_3k_x_3k2_pipeline[NUM_TAPS-1] + y_3k_x_3k1_pipeline[NUM_TAPS-1] + y_3k_x_3k_pipeline[NUM_TAPS-1];
+  y_out1 = y_3k1_x_3k2_pipeline[NUM_TAPS-1] + y_3k1_x_3k1_pipeline[NUM_TAPS-1] + y_3k1_x_3k_pipeline[NUM_TAPS-1];
+  y_out2 = y_3k2_x_3k2_pipeline[NUM_TAPS-1] + y_3k2_x_3k1_pipeline[NUM_TAPS-1] + y_3k2_x_3k_pipeline[NUM_TAPS-1];
 end
 
-// Perform final summations and output the filtered data
-assign y_out = (h0 - h2_delay + h12minh1_delay) >>> 31;
-assign y_out1 = (h01minh1 - h0 - h2_delay) >>> 31;
-assign y_out2 = (h012 - h01minh1 - h12minh1) >>> 31;
 
 endmodule
-
