@@ -63,6 +63,7 @@ When synthesized using Cadence Genus and 45nm standard cells, the area of this d
 It's worth noting that Genus performs extensive optimization via various techniques including buffer insertion which can add cells and therefore area to the design. Genus settings were kept consistent throughout benchmarking to ensure fair comparison across designs.
 
 #### Power Report
+```
 Instance: /filter
 Power Unit: W
 PDB Frames: /stim#0/frame#0
@@ -81,7 +82,7 @@ PDB Frames: /stim#0/frame#0
     Subtotal     3.41944e-02  3.56101e+00  1.38891e+00  4.98411e+00 100.00%
   Percentage           0.69%       71.45%       27.87%      100.00% 100.00%
   -------------------------------------------------------------------------
-
+```
 The entire design consumes 5 watts, with 75% of this consumption coming from logic.
 
 #### Timing Report
@@ -108,6 +109,7 @@ As seen above, the filter rejects the high frequency component (mostly captured 
 This design is much larger than the pipelined version of the filter. The total area is ~1.08 mm^2. More information can be found in `./ParallelFilter_L=2/Cadence_Genus/2ParallelFilter_Area.rpt`
 
 #### Power Report
+```
 Instance: /filter
 Power Unit: W
 PDB Frames: /stim#0/frame#0
@@ -126,7 +128,7 @@ PDB Frames: /stim#0/frame#0
     Subtotal     1.07361e-01  8.29289e+00  4.83922e+00  1.32395e+01 100.00%
   Percentage           0.81%       62.64%       36.55%      100.00% 100.00%
   -------------------------------------------------------------------------
-
+```
 Unsurprisingly, the design also consumes more power at ~13 Watts. Nearly all of this power consumption comes from logic at over 96% of consumption.
 
 
@@ -140,15 +142,38 @@ The 3-Parallel implementation of this low pass filter was realized using the 3-P
 
 The image below shows the 3-parallel filter's behavior when processing our two tone sinusoid:
 
-![3-Parallel FIR Filter - Two Tone Response]()
+![3-Parallel FIR Filter - Two Tone Response](./Docs/3-ParallelFilter-two_tone_response.png)
 
 
 #### Area Report
+The area report from Cadence Genus shows that the 3-Parallel filter implementation occupies .906 mm^2. This is slightly smaller than the 2-parallel implementation. I believe this is partially due to the fact that Genus sees the filter as being so far out of spec that it spends more time searching for a more optimal implementation. The synthesis process took close to three hours for this design.
 
 #### Power Report
+```
+Instance: /filter
+Power Unit: W
+PDB Frames: /stim#0/frame#0
+  -------------------------------------------------------------------------
+    Category         Leakage     Internal    Switching        Total    Row%
+  -------------------------------------------------------------------------
+      memory     0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00   0.00%
+    register     2.39722e-03  4.47747e-01  2.04399e-02  4.70584e-01   6.37%
+       latch     0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00   0.00%
+       logic     7.40536e-02  4.35375e+00  2.48493e+00  6.91273e+00  93.63%
+        bbox     0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00   0.00%
+       clock     0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00   0.00%
+         pad     0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00   0.00%
+          pm     0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00   0.00%
+  -------------------------------------------------------------------------
+    Subtotal     7.64508e-02  4.80149e+00  2.50537e+00  7.38331e+00 100.00%
+  Percentage           1.04%       65.03%       33.93%      100.00% 100.00%
+  -------------------------------------------------------------------------
+```
+The design consumes about 7.4 watts of power, again mostly from the logic cells. This again could be due to Genus finding a more optimal implementation than in previous designs.
+
 
 #### Timing Report
-
+The timing report shows that the critical path has a slack of -1745ps. The critical path starts at the sample register and goes all the way to the output. More detailed info can be found in `./ParallelFilter_L=3/Cadence_Genus/3ParallelFilter_Timing.rpt`. The same logic applies to this design as the 2-parallel design. The larger amount of slack isn't indicative of the throughput of the filter. Since the timing constraints held the operating frequency at 2GHz with the hope that the filter would remain fast enough to perform real-time processing, the slack looks the worst in this example. Had the clock rate been divided by three, the circuit would have had an easier time keeping up with timing requirements. 
 
 ### 3 Parallel and Pipelined Low Pass FIR Filter
 In order to utilize the benefits of both parallelism and pipelining, I implemented the architecture found on page 73 of the course textbook [1].
@@ -162,6 +187,8 @@ The filter behaves as expected when given the two tone sinusoid as input (see be
 ![3-Parallel FIR Filter with Fine Grain Pipelining - Two Tone Response](./Docs/3-Parallel-Pipelined-FIR-Filter-two_tone_response.png)
 
 The filter rejects higher frequency components (distributed across the three input branches), and passes lower frequency components.
+
+### NOTICE: I am awaiting synthesis results from Genus. As these designs have gotten more complex, the synthesis time has dramatically increased. The synthesis time for the 3-parallel filter was around 3 hours.
 
 #### Area Report
 

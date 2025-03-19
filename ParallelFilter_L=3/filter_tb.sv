@@ -42,7 +42,7 @@ module filter_tb;
     sample_count = 0;
 
     // Open the raw signal data
-    file = $fopen("../Python/InputSignals/cosine_wave_100MHz.bin", "rb");
+    file = $fopen("../Python/InputSignals/cosine_wave_100MHz_500MHz.bin", "rb");
     if (file == 0) begin
         $display("Error: Unable to open file!");
         $finish;
