@@ -184,7 +184,7 @@ In order to utilize the benefits of both parallelism and pipelining, I implement
 
 ![3-Parallel FIR Filter Architecture with Fine-Grain Pipelining](./Docs/3-Parallel-Pipelined-FIR-Filter-Architecture.png)
 
-In this implementation, pipeline registers are added between the multipliers of each branch of the filter. This decreases the critical path to the adders that accumulate the results from the multipliers.
+In this implementation, pipeline registers are added between the multipliers of each branch of the filter. This moves the critical path to the adders that accumulate the results from the multipliers.
 
 The filter behaves as expected when given the two tone sinusoid as input (see below).
 
