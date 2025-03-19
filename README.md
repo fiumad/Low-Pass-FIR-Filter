@@ -188,10 +188,45 @@ The filter behaves as expected when given the two tone sinusoid as input (see be
 
 The filter rejects higher frequency components (distributed across the three input branches), and passes lower frequency components.
 
-### NOTICE: I am awaiting synthesis results from Genus. As these designs have gotten more complex, the synthesis time has dramatically increased. The synthesis time for the 3-parallel filter was around 3 hours.
-
 #### Area Report
+Shockingly, the area occupied by the 3-parallel pipelined design is only 16,000 square microns or ~0.016mm^2. I believe that this shocking result is due to Genus attempting to optimize the circuit's critical path to meeting timing constraints. In the pipelined only design, the area was small and the slack was close to being in spec. In the 2 and 3 parallel designs, the critical path was much larger and therefore the negative slack was far worse. As a result, Genus spent more time incrementally optimizing and adding more circuitry to try to meet timing requirements. In this design, the critical path is much shorter thanks to the pipelining, and Genus doesn't have to do as much optimization to get close to spec. Further evidence of this is the fact that Genus took about three hours to synthesize the 3-parallel design, but it only took minutes to synthesize this design (despite keeping all Genus settings constant).
 
 #### Power Report
+```
+Instance: /filter
+Power Unit: W
+PDB Frames: /stim#0/frame#0
+  -------------------------------------------------------------------------
+    Category         Leakage     Internal    Switching        Total    Row%
+  -------------------------------------------------------------------------
+      memory     0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00   0.00%
+    register     2.04245e-04  5.25158e-02  6.19283e-03  5.89129e-02  31.11%
+       latch     0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00   0.00%
+       logic     1.19694e-03  8.19056e-02  4.36546e-02  1.26757e-01  66.94%
+        bbox     0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00   0.00%
+       clock     0.00000e+00  0.00000e+00  3.68400e-03  3.68400e-03   1.95%
+         pad     0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00   0.00%
+          pm     0.00000e+00  0.00000e+00  0.00000e+00  0.00000e+00   0.00%
+  -------------------------------------------------------------------------
+    Subtotal     1.40119e-03  1.34421e-01  5.35315e-02  1.89354e-01 100.00%
+  Percentage           0.74%       70.99%       28.27%      100.00% 100.00%
+  -------------------------------------------------------------------------
+```
+
+As a result of adding less standard cells for the sake of meeting timing requirements, the power consumption of this design is far better. The entire filter only consumes about 200mW with more of the consumption coming from registers at ~30%.
 
 #### Timing Report
+Finally, the timing report shows that this design is much closer to meeting specs than all the others. The critical path (which is far shorter than the critical path in the other designs) has a negative slack of about 350ps. The critical path starts at the accumulation pipeline register, goes through the adder tree, and ends at the output. This design is so much faster than other architectures because the pipeline registers restrict the critical path to the adder tree used in the accumulation. On top of this, since the design is 3-parallel, each adder tree is 1/3rd the length of the adder tree in the pipelined only implementation. The full timing report can be found at `./PipelinedParallelFilter_L=3/Cadence_Genus/3ParallelPipelinedFilter_timing.rpt`
+
+
+### Final Conclusions
+Both theory and synthesis results show us that the most practical design is the parallelized and pipelined design. While the schematic for the 3-parallel fine-grain pipelined filter might be slightly more difficult to understand and therefore harder to capture, the benefits clearly outweigh this design complexity cost. 
+
+The 3-parallel pipelined filter was not only faster, it was smaller, and consumed less power.
+
+In the future however, it would be prudent to choose a more reasonable operating frequency for each design, and to cross compare the achieved throughput with area and power consumption required. I believe that Genus's optimization routine significantly impacted the final implemenation of several of these designs making the comparisons somewhat unfair. In the original design of these experiments, I had figured that keeping the operating frequency and timing constraints identical across implementations would be the most scientific approach to ensuring apples-to-apples comparison, however seeing the huge changes made by the synthesis tool in an attempt to meet unrealistic specs, it is safe to say that the experiment should be redesigned.
+
+
+
+
+
