@@ -6,6 +6,7 @@ module filter_tb;
   logic rst;
   logic signed [31:0] x_in, x_in1, x_in2;
   logic signed [63:0] y_out, y_out1, y_out2;
+  logic signed [63:0] y_3k_x_3k_pipeline_out [101:0];
 
   parameter CLK_PERIOD = 0.5; // 2GHz Clock
   parameter NUM_SAMPLES = 1000;
@@ -42,7 +43,7 @@ module filter_tb;
     sample_count = 0;
 
     // Open the raw signal data
-    file = $fopen("../Python/InputSignals/cosine_wave_100MHz.bin", "rb");
+    file = $fopen("../Python/InputSignals/cosine_wave_100MHz_500MHz.bin", "rb");
     if (file == 0) begin
         $display("Error: Unable to open file!");
         $finish;

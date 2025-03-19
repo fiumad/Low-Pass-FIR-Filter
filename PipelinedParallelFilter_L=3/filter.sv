@@ -9,7 +9,9 @@ module filter(
   output logic signed [63:0] y_out,
   output logic signed [63:0] y_out1,
   output logic signed [63:0] y_out2
+
 );
+
 
 parameter NUM_TAPS = 102;
 
@@ -122,7 +124,7 @@ always_comb begin
 end
 
 
-// Combined fine-grain pipelining and parallel processing for 3-tap FIR filter
+// Combined fine-grain pipelining and parallel processing for 102-tap FIR filter
 
 // Instantiate registers that lie between multiplications in each branch of
 // the filter
@@ -165,7 +167,7 @@ always_ff @(posedge clk or posedge rst) begin
       y_3k_x_3k2_pipeline[i] <= 0;
     end
   end else begin
-    for (int i = 1; i < NUM_TAPS-1; i=i+1) begin
+    for (int i = 1; i < NUM_TAPS; i=i+1) begin
       // Shift and multiply by new coefficient
       y_3k_x_3k_pipeline[i] <=  y_3k_x_3k_pipeline[i-1] * coeffs[i-1];
       y_3k_x_3k1_pipeline[i] <= y_3k_x_3k1_pipeline[i-1] * coeffs[i-1];
@@ -187,7 +189,7 @@ always_ff @(posedge clk or posedge rst) begin
       y_3k1_x_3k2_pipeline[i] <= 0;
     end
   end else begin
-    for (int i = 1; i < NUM_TAPS-1; i=i+1) begin
+    for (int i = 1; i < NUM_TAPS; i=i+1) begin
       // Shift and multiply by new coefficient
       y_3k1_x_3k_pipeline[i] <= y_3k1_x_3k_pipeline[i-1] * coeffs[i-1];
       y_3k1_x_3k1_pipeline[i] <= y_3k1_x_3k1_pipeline[i-1] * coeffs[i-1];
@@ -208,7 +210,7 @@ always_ff @(posedge clk or posedge rst) begin
       y_3k2_x_3k2_pipeline[i] <= 0;
     end
   end else begin
-    for (int i = 1; i < NUM_TAPS-1; i=i+1) begin
+    for (int i = 1; i < NUM_TAPS; i=i+1) begin
       // Shift and multiply by new coefficient
       y_3k2_x_3k_pipeline[i] <= y_3k2_x_3k_pipeline[i-1] * coeffs[i-1];
       y_3k2_x_3k1_pipeline[i] <= y_3k2_x_3k1_pipeline[i-1] * coeffs[i-1];
@@ -222,9 +224,14 @@ end
 
 // Accumulate the values from the multiplication pipelines
 always_comb begin
-  y_out = y_3k_x_3k2_pipeline[NUM_TAPS-1] + y_3k_x_3k1_pipeline[NUM_TAPS-1] + y_3k_x_3k_pipeline[NUM_TAPS-1];
-  y_out1 = y_3k1_x_3k2_pipeline[NUM_TAPS-1] + y_3k1_x_3k1_pipeline[NUM_TAPS-1] + y_3k1_x_3k_pipeline[NUM_TAPS-1];
-  y_out2 = y_3k2_x_3k2_pipeline[NUM_TAPS-1] + y_3k2_x_3k1_pipeline[NUM_TAPS-1] + y_3k2_x_3k_pipeline[NUM_TAPS-1];
+  for (int i = NUM_TAPS-1; i >= 0; i=i-1) begin
+  //y_out = y_3k_x_3k2_pipeline[NUM_TAPS-1] + y_3k_x_3k1_pipeline[NUM_TAPS-1] + y_3k_x_3k_pipeline[NUM_TAPS-1];
+  //y_out1 = y_3k1_x_3k2_pipeline[NUM_TAPS-1] + y_3k1_x_3k1_pipeline[NUM_TAPS-1] + y_3k1_x_3k_pipeline[NUM_TAPS-1];
+  //y_out2 = y_3k2_x_3k2_pipeline[NUM_TAPS-1] + y_3k2_x_3k1_pipeline[NUM_TAPS-1] + y_3k2_x_3k_pipeline[NUM_TAPS-1];
+  y_out = y_3k_x_3k2_pipeline[i] + y_3k_x_3k1_pipeline[i] + y_3k_x_3k_pipeline[i];
+  y_out1 = y_3k1_x_3k2_pipeline[i] + y_3k1_x_3k1_pipeline[i] + y_3k1_x_3k_pipeline[i];
+  y_out2 = y_3k2_x_3k2_pipeline[i] + y_3k2_x_3k1_pipeline[i] + y_3k2_x_3k_pipeline[i];
+  end 
 end
 
 
