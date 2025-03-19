@@ -146,7 +146,7 @@ always_ff @(posedge clk or posedge rst) begin
       x_3k2_samples[i] <= 0;
     end 
   end else begin
-    for (int i=NUM_TAPS/2-1; i > 0; i=i-1) begin
+    for (int i=NUM_TAPS/3-1; i > 0; i=i-1) begin
       // Shift samples
       x_3k_samples[i] <= x_3k_samples[i-1];
       x_3k1_samples[i] <= x_3k1_samples[i-1];

@@ -1,0 +1,164 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2024 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+[21:01:33.235346] Configured Lic search path (23.02-s006): 5279@licsrvr34.win.rpi.edu:27015@licsrvr2.arc.rpi.edu
+
+Version: 23.13-s073_1, built Fri Nov 08 07:01:49 PST 2024
+Options: -files Parallel_L=2.g 
+Date:    Tue Mar 18 21:01:33 2025
+Host:    rs-02.ecse.rpi.edu (x86_64 w/Linux 4.18.0-553.40.1.el8_10.x86_64) (14cores*56cpus*2physical cpus*Intel(R) Xeon(R) Gold 6132 CPU @ 2.60GHz 19712KB) (527312528KB)
+PID:     2602623
+OS:      Red Hat Enterprise Linux 8.10 (Ootpa)
+
+Checking out license: Genus_Synthesis
+[21:01:33.313416] Periodic Lic check successful
+[21:01:33.313433] Feature usage summary:
+[21:01:33.313434] Genus_Synthesis
+
+
+
+***********************************************************************************************************
+***********************************************************************************************************
+
+
+
+Finished executable startup (1 second elapsed).
+
+Loading tool scripts...
+Finished loading tool scripts (16 seconds elapsed).
+
+#@ Processing -files option
+@genus:root: 1> source Parallel_L=2.g
+#@ Begin verbose source ./Parallel_L=2.g
+@file(Parallel_L=2.g) 2: set_db init_lib_search_path /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/
+  Setting attribute of root '/': 'init_lib_search_path' = /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/
+@file(Parallel_L=2.g) 3: set_db library /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3649719)
+        : Check and update the library to have the attribute defined before it is used by any of the groups further down in the library. When a group is defined, all attributes which affect that particular group should be known at that point else Genus will ignore their definition.
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3649761)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3649803)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3649845)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3649887)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3649929)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3724890)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3724932)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3724974)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3725016)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3725058)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3725100)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3800061)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3800103)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3800145)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3800187)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3800229)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3800271)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3875232)
+Warning : Found empty library construct. [LBR-512]
+        : Group 'receiver_capacitance' is ignored. It is either empty or has attributes which are not relevant for current tool. (File /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib, Line 3875274)
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'LBR-512'.
+
+  Message Summary for Library 45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib:
+  ****************************************************************************
+  Found empty library construct. [LBR-512]: 30
+  An unsupported construct was detected in this library. [LBR-40]: 7
+  ****************************************************************************
+ 
+Info    : Created nominal operating condition. [LBR-412]
+        : Operating condition '_nominal_' was created for the PVT values (1.000000, 1.000000, 85.000000) in library '45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib'.
+        : The nominal operating condition is represented, either by the nominal PVT values specified in the library source (via nom_process,nom_voltage and nom_temperature respectively), or by the default PVT values (1.0,1.0,1.0).
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'ANTENNA_X1_9T_SG40RVT' must have an output pin.
+        : Add the missing output pin(s), then reload the library. Else the library cell will be marked as timing model i.e. unusable. Timing_model means that the cell does not have any defined function. If there is no output pin, Genus will mark library cell as unusable i.e. the attribute 'usable' will be marked to 'false' on the libcell. Therefore, the cell is not used for mapping and it will not be picked up from the library for synthesis. If you query the attribute 'unusable_reason' on the libcell; result will be: 'Library cell has no output pins.'Note: The message LBR-9 is only for the logical pins and not for the power_ground pins. Genus will depend upon the output function defined in the pin group (output pin) of the cell, to use it for mapping. The pg_pin will not have any function defined.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'ANTENNA_X1_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DCAP_T16_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DCAP_T16_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DCAP_T32_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DCAP_T32_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DCAP_T8_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DCAP_T8_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'FILLCAP_T16_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'FILLCAP_T16_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'FILLCAP_T32_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'FILLCAP_T32_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'FILLCAP_T4_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'FILLCAP_T4_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'FILLCAP_T8_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'FILLCAP_T8_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'CNRLEFTBOTTOM_T4_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'CNRLEFTBOTTOM_T4_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'CNRLEFTTOP_T4_9T_SG40RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'CNRLEFTTOP_T4_9T_SG40RVT' must have an output pin.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'LBR-9'.
+  Setting attribute of root '/': 'library' = /cad/cds/GF_PDK/45SPCLO/45spclo_SC_BASE_9T_SG40RVT_2023q4v1/liberty/ccs_lib/45spclo_SC_BASE_9T_SG40RVT_TT_1P00V_85C_ccs.lib
+@file(Parallel_L=2.g) 4: read_hdl -sv ../filter.sv
+@file(Parallel_L=2.g) 5: elaborate
+  Library has 320 usable logic and 127 usable sequential lib-cells.
+Info    : Elaborating Design. [ELAB-1]
+        : Elaborating top-level block 'filter' from file '../filter.sv'.
+Warning : Using default parameter value for module elaboration. [CDFG-818]
+        : Elaborating block 'filter' with default parameters value.
+Warning : Index out of bounds. [CDFG-287]
+        : Index 49 is out of bounds for array 'x_3k_samples[33:0]' in file '../filter.sv' on line 151.
+        : Ensure that the desired index is specified correctly in the HDL.
+Warning : Index out of bounds. [CDFG-287]
+        : Index 49 is out of bounds for array 'x_3k_samples[33:0]' in file '../filter.sv' on line 151.
+Error   : Could not resolve complex expression. [CDFG-200] [elaborate]
+        : Could not find the object for the reference 'x_3k_samples[(i - 1)]' in module 'filter' in file '../filter.sv' on line 151.
+        : Error during elaboration.
+Info    : Unable to elaborate the design. [ELAB-4]
+        : Module 'filter' contains errors and cannot be elaborated.
+UM:   flow.cputime  flow.realtime  timing.setup.tns  timing.setup.wns  snapshot
+UM:*                                                                   elaborate
+#@ End verbose source ./Parallel_L=2.g
+1
+Encountered problems processing file: Parallel_L=2.g
+@genus:root: 2> exit
+
+Lic Summary:
+[21:19:03.035850] Cdslmd servers: licsrvr34
+[21:19:03.560169] Feature usage summary:
+[21:19:03.560170] Genus_Synthesis
+
+Normal exit.
